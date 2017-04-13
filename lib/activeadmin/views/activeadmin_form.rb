@@ -34,15 +34,28 @@ module ActiveAdmin
         "#{loading_map_code}" \
         "<div id=\"google_map\" style=\"height: #{@height}px\"></div>" \
         "<script>
+          function __getGeoLocation() {
+              if (navigator.geolocation)
+                  navigator.geolocation.getCurrentPosition(_successGeoLocation);
+              else
+                  console.log("Geolocation is not supported by this browser.");
+          }
+          function _successGeoLocation(pos) {
+            googleMapObject.coords.lat = position.coords.latitude;
+            googleMapObject.coords.lng = position.coords.longitude;
+          }
           var googleMapObject = {
             coords: null,
             map: null,
             marker: null,
 
             getCoordinates: function() {
+              if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(showPosition);
+              }
               return {
-                lat: parseFloat($(\"##{@id_lat}\").val()) || 55.7522200,
-                lng: parseFloat($(\"##{@id_lng}\").val()) || 37.6155600,
+                lat: parseFloat($(\"##{@id_lat}\").val()) || -25.299101,
+                lng: parseFloat($(\"##{@id_lng}\").val()) || -57.5817514,
               };
             },
 
@@ -52,6 +65,7 @@ module ActiveAdmin
             },
 
             init: function() {
+              __getGeoLocation();
               googleMapObject.coords = googleMapObject.getCoordinates();
               googleMapObject.saveCoordinates();
 
@@ -89,6 +103,15 @@ module ActiveAdmin
         "#{loading_map_code}" \
         "<div id=\"yandex_map\" style=\"height: #{@height}px\"></div>" \
         "<script type=\"text/javascript\">
+          function __getGeoLocation() {
+              if (navigator.geolocation)
+                  navigator.geolocation.getCurrentPosition(_successGeoLocation);
+              else
+                  console.log("Geolocation is not supported by this browser.");
+          }
+          function _successGeoLocation(pos) {
+            yandexMapObject.coords = [position.coords.latitude, position.coords.longitude];
+          }
           var yandexMapObject = {
             coords: null,
             map: null,
@@ -96,8 +119,8 @@ module ActiveAdmin
 
             getCoordinates: function() {
               return [
-                parseFloat($(\"##{@id_lat}\").val()) || 55.7522200,
-                parseFloat($(\"##{@id_lng}\").val()) || 37.6155600,
+                parseFloat($(\"##{@id_lat}\").val()) || -25.299101,
+                parseFloat($(\"##{@id_lng}\").val()) || -57.5817514,
               ];
             },
 
@@ -107,6 +130,7 @@ module ActiveAdmin
             },
 
             init: function() {
+              __getGeoLocation();
               yandexMapObject.coords = yandexMapObject.getCoordinates();
               yandexMapObject.saveCoordinates();
 
