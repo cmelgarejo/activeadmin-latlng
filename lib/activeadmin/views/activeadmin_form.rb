@@ -38,11 +38,14 @@ module ActiveAdmin
               if (navigator.geolocation)
                   navigator.geolocation.getCurrentPosition(_successGeoLocation);
               else
-                  console.log("Geolocation is not supported by this browser.");
+                  console.log(\"Geolocation is not supported by this browser.\");
           }
           function _successGeoLocation(pos) {
-            googleMapObject.coords.lat = position.coords.latitude;
-            googleMapObject.coords.lng = position.coords.longitude;
+            googleMapObject.coords.lat = pos.coords.latitude;
+            googleMapObject.coords.lng = pos.coords.longitude;
+            googleMapObject.marker.setPosition(googleMapObject.coords);
+            $(\"##{@id_lat}\").val( googleMapObject.coords.lat.toFixed(10) );
+            $(\"##{@id_lng}\").val( googleMapObject.coords.lng.toFixed(10) );
           }
           var googleMapObject = {
             coords: null,
@@ -50,12 +53,9 @@ module ActiveAdmin
             marker: null,
 
             getCoordinates: function() {
-              if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(showPosition);
-              }
               return {
                 lat: parseFloat($(\"##{@id_lat}\").val()) || -25.299101,
-                lng: parseFloat($(\"##{@id_lng}\").val()) || -57.5817514,
+                lng: parseFloat($(\"##{@id_lng}\").val()) || -57.5817514
               };
             },
 
@@ -107,10 +107,14 @@ module ActiveAdmin
               if (navigator.geolocation)
                   navigator.geolocation.getCurrentPosition(_successGeoLocation);
               else
-                  console.log("Geolocation is not supported by this browser.");
+                  console.log(\"Geolocation is not supported by this browser.\");
           }
           function _successGeoLocation(pos) {
-            yandexMapObject.coords = [position.coords.latitude, position.coords.longitude];
+            yandexMapObject.coords = [pos.coords.latitude, pos.coords.longitude];
+            yandexMapObject.placemark.geometry.setCoordinates(yandexMapObject.coords);
+            yandexMapObject.map.setCenter(yandexMapObject.coords);
+            $(\"##{@id_lat}\").val( yandexMapObject.coords[0].toFixed(10) );
+            $(\"##{@id_lng}\").val( yandexMapObject.coords[1].toFixed(10) );
           }
           var yandexMapObject = {
             coords: null,
