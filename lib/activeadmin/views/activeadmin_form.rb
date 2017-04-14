@@ -7,8 +7,8 @@ module ActiveAdmin
         map    = args[:map]    || :google
         id_lat = args[:id_lat] || "#{class_name}_lat"
         id_lng = args[:id_lng] || "#{class_name}_lng"
-        start_lat = args[:start_lng] || -25.299101
-        start_lng = args[:start_lng] || -57.5817514
+        start_lat = args[:start_lng] || 0.0
+        start_lng = args[:start_lng] || 0.0
         height = args[:height] || 400
         loading_map = args[:loading_map].nil? ? true : args[:loading_map]
 
