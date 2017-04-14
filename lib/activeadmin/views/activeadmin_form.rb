@@ -7,23 +7,25 @@ module ActiveAdmin
         map    = args[:map]    || :google
         id_lat = args[:id_lat] || "#{class_name}_lat"
         id_lng = args[:id_lng] || "#{class_name}_lng"
+        start_lat = args[:start_lng] || -25.299101
+        start_lng = args[:start_lng] || -57.5817514
         height = args[:height] || 400
         loading_map = args[:loading_map].nil? ? true : args[:loading_map]
 
         case map
         when :yandex
-          insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, height, loading_map)
+          insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
         when :google
-          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, height, loading_map)
+          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
         else
-          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, height, loading_map)
+          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
         end
       end
     end
 
     class LatlngProxy < FormtasticProxy
       def build(form_builder, *args, &block)
-        @lang, @id_lat, @id_lng, @height, @loading_map = *args
+        @lang, @id_lat, @id_lng, @start_lat, @start_lng, @height, @loading_map = *args
       end
     end
 
@@ -34,6 +36,7 @@ module ActiveAdmin
         "#{loading_map_code}" \
         "<div id=\"google_map\" style=\"height: #{@height}px\"></div>" \
         "<script>
+          var _lat = #{@start_lat}, _lng = #{@start_lng};
           function __getGeoLocation() {
               if (navigator.geolocation)
                   navigator.geolocation.getCurrentPosition(_successGeoLocation);
@@ -41,12 +44,15 @@ module ActiveAdmin
                   console.log(\"Geolocation is not supported by this browser.\");
           }
           function _successGeoLocation(pos) {
-            googleMapObject.coords.lat = pos.coords.latitude;
-            googleMapObject.coords.lng = pos.coords.longitude;
-            googleMapObject.marker.setPosition(googleMapObject.coords);
-            $(\"##{@id_lat}\").val( googleMapObject.coords.lat.toFixed(10) );
-            $(\"##{@id_lng}\").val( googleMapObject.coords.lng.toFixed(10) );
+            if(googleMapObject.coords.lat == _lat && googleMapObject.coords.lng == _lng) {
+              googleMapObject.coords.lat = pos.coords.latitude;
+              googleMapObject.coords.lng = pos.coords.longitude;
+              googleMapObject.marker.setPosition(googleMapObject.coords);
+              $(\"##{@id_lat}\").val( googleMapObject.coords.lat.toFixed(10) );
+              $(\"##{@id_lng}\").val( googleMapObject.coords.lng.toFixed(10) );
+            }
           }
+
           var googleMapObject = {
             coords: null,
             map: null,
@@ -54,8 +60,8 @@ module ActiveAdmin
 
             getCoordinates: function() {
               return {
-                lat: parseFloat($(\"##{@id_lat}\").val()) || -25.299101,
-                lng: parseFloat($(\"##{@id_lng}\").val()) || -57.5817514
+                lat: parseFloat($(\"##{@id_lat}\").val()) || _lat,
+                lng: parseFloat($(\"##{@id_lng}\").val()) || _lng
               };
             },
 
@@ -103,6 +109,7 @@ module ActiveAdmin
         "#{loading_map_code}" \
         "<div id=\"yandex_map\" style=\"height: #{@height}px\"></div>" \
         "<script type=\"text/javascript\">
+          var _lat = #{@start_lat}, _lng = #{@start_lng};
           function __getGeoLocation() {
               if (navigator.geolocation)
                   navigator.geolocation.getCurrentPosition(_successGeoLocation);
@@ -110,11 +117,13 @@ module ActiveAdmin
                   console.log(\"Geolocation is not supported by this browser.\");
           }
           function _successGeoLocation(pos) {
-            yandexMapObject.coords = [pos.coords.latitude, pos.coords.longitude];
-            yandexMapObject.placemark.geometry.setCoordinates(yandexMapObject.coords);
-            yandexMapObject.map.setCenter(yandexMapObject.coords);
-            $(\"##{@id_lat}\").val( yandexMapObject.coords[0].toFixed(10) );
-            $(\"##{@id_lng}\").val( yandexMapObject.coords[1].toFixed(10) );
+            if(yandexMapObject.coords[0] == _lat && yandexMapObject.coords[1] == _lng) {
+              yandexMapObject.coords = [pos.coords.latitude, pos.coords.longitude];
+              yandexMapObject.placemark.geometry.setCoordinates(yandexMapObject.coords);
+              yandexMapObject.map.setCenter(yandexMapObject.coords);
+              $(\"##{@id_lat}\").val( yandexMapObject.coords[0].toFixed(10) );
+              $(\"##{@id_lng}\").val( yandexMapObject.coords[1].toFixed(10) );
+            }
           }
           var yandexMapObject = {
             coords: null,
