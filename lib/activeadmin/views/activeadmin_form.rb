@@ -132,8 +132,8 @@ module ActiveAdmin
 
             getCoordinates: function() {
               return [
-                parseFloat($(\"##{@id_lat}\").val()) || -25.299101,
-                parseFloat($(\"##{@id_lng}\").val()) || -57.5817514,
+                parseFloat($(\"##{@id_lat}\").val()) || _lat,
+                parseFloat($(\"##{@id_lng}\").val()) || _lng,
               ];
             },
 
