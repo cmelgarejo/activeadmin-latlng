@@ -13,12 +13,12 @@ module ActiveAdmin
         loading_map = args[:loading_map].nil? ? true : args[:loading_map]
 
         case map
-        when :yandex
-          insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
-        when :google
-          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
-        else
-          insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+          when :yandex
+            insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+          when :google
+            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+          else
+            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
         end
       end
     end
@@ -168,7 +168,10 @@ module ActiveAdmin
             }
           }
 
-          ymaps.ready(yandexMapObject.init);
+          document.addEventListener(\"DOMContentLoaded\", function(event) {
+            ymaps.ready(yandexMapObject.init);
+            console.log('Initialized Yandex!')
+          });
         </script>" \
         "</li>"
       end
