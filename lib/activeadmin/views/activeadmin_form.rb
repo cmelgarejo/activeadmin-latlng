@@ -11,27 +11,27 @@ module ActiveAdmin
         start_lng = args[:start_lng] || 0.0
         height = args[:height] || 400
         loading_map = args[:loading_map].nil? ? true : args[:loading_map]
-
+        api_key = args[:api_key] || nil
         case map
           when :yandex
-            insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+            insert_tag(YandexMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map, api_key)
           when :google
-            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map, api_key)
           else
-            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map)
+            insert_tag(GoogleMapProxy, form_builder, lang, id_lat, id_lng, start_lat, start_lng, height, loading_map, api_key)
         end
       end
     end
 
     class LatlngProxy < FormtasticProxy
       def build(form_builder, *args, &block)
-        @lang, @id_lat, @id_lng, @start_lat, @start_lng, @height, @loading_map = *args
+        @lang, @id_lat, @id_lng, @start_lat, @start_lng, @height, @loading_map, @api_key = *args
       end
     end
 
     class GoogleMapProxy < LatlngProxy
       def to_s
-        loading_map_code = @loading_map ? "<script src=\"https://maps.googleapis.com/maps/api/js?language=#{@lang}&callback=googleMapObject.init\" async defer></script>" : ''
+        loading_map_code = @loading_map ? "<script src=\"https://maps.googleapis.com/maps/api/js?key=#{@api_key}&language=#{@lang}&callback=googleMapObject.init\" async defer></script>" : ''
         "<li>" \
         "#{loading_map_code}" \
         "<div id=\"google_map\" style=\"height: #{@height}px\"></div>" \
