@@ -56,10 +56,12 @@ end
 
 ## Contributors
 
-Alexey Krylov
-Christian Melgarejo
+* Alexey Krylov
+
+* Christian Melgarejo
 
 ## License
 
-MIT License. Copyright 2016 Alexey Krylov
-MIT License. Copyright 2017 Christian Melgarejo
+* MIT License. Copyright 2016 Alexey Krylov
+
+* MIT License. Copyright 2017 Christian Melgarejo
