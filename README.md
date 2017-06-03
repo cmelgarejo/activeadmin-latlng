@@ -37,6 +37,8 @@ end
 
 * `loading_map` - loading map library. `true` by default. Set to `false`, if map loaded in other place.
 
+* `api_key` - set the API KEY for the Google Maps option
+
 ### Example
 
 ```ruby
@@ -44,7 +46,7 @@ form do |f|
   f.inputs do
     f.input :lat
     f.input :lng
-    f.latlng lang: :ru, map: :yandex, height: 500, loading_map: false
+    f.latlng lang: :ru, map: :google, height: 500, loading_map: false, api_key: T3GRGE$U5rydr5YrhdRYehrEdrhey5h_ge
   end
   f.actions
 end
@@ -55,7 +57,9 @@ end
 ## Contributors
 
 Alexey Krylov
+Christian Melgarejo
 
 ## License
 
 MIT License. Copyright 2016 Alexey Krylov
+MIT License. Copyright 2017 Christian Melgarejo
